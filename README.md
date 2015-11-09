@@ -1,5 +1,3 @@
 test git
 
 ren
-
-date
