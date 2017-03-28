@@ -4,13 +4,16 @@
 
 ## 如下截图：
 
-![screenshot.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/ada8faaa27009e943627eaa66d31de3d.png)
+![](http://i.imgur.com/bm3W68Q.png)
+
 
 client都一直在回复收到2号包（ack=2）了，可是server跟傻了一样居然还发seq=1的包（按理，应该发比2大的包啊）
 
 ## 系统配置：
 
-![screenshot.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a40c6165db25a0a636fae7b43a3bb843.png)
+    net.ipv4.tcp_keepalive_time = 20
+    net.ipv4.tcp_keepalive_probes = 5
+    net.ipv4.tcp_keepalive_intvl = 3
 
 ## 原因：
 抓包不全的话wireshark有缺陷，把keepalive包识别成了dup ack包，看内容这种dup ack和keepalive似乎是一样的，flags都是0x010。keep alive的定义的是后退一格(seq少1）。
@@ -27,7 +30,7 @@ Wireshark只有在抓到数据包（66号包）和keep alive包的情况下才�
 下面是知识点啦
 
 ## 正常的keep-alive Case：
-![screenshot.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/01eb03a21274cbdad7a91a7466864237.png)
+![](http://i.imgur.com/DsTWFZr.png)
 
 keep-alive 通过发一个比实际seq小1的包，比如server都已经 ack 12583了，client故意发一个seq 12582来标识这是一个keep-Alive包
 
